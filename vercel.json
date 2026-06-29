@@ -1,0 +1,27 @@
+# Copy this to .env.local and fill in your keys
+
+# Stripe - get these from https://dashboard.stripe.com/apikeys
+STRIPE_SECRET_KEY=sk_live_YOUR_KEY_HERE
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_YOUR_KEY_HERE
+
+# Stripe Price IDs - create these in your Stripe dashboard
+# Product: Single State Lookup - $9.99 one time
+STRIPE_PRICE_SINGLE=price_YOUR_SINGLE_PRICE_ID
+
+# Product: Monthly Subscription - $79/month
+STRIPE_PRICE_MONTHLY=price_YOUR_MONTHLY_PRICE_ID
+
+# Product: Annual Subscription - $749/year
+STRIPE_PRICE_ANNUAL=price_YOUR_ANNUAL_PRICE_ID
+
+# Product: Team Plan - $299/month
+STRIPE_PRICE_TEAM=price_YOUR_TEAM_PRICE_ID
+
+# Anthropic - get from https://console.anthropic.com
+ANTHROPIC_API_KEY=sk-ant-YOUR_KEY_HERE
+
+# Your site URL (update when deployed)
+NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
+
+# Stripe webhook secret - get from Stripe dashboard after setting up webhook
+STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET
