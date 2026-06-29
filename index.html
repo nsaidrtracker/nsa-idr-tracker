@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSA/IDR State Law Tracker — AI-Powered Compliance Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#0F172A;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+button{font-family:'Inter',sans-serif;cursor:pointer;border:none;outline:none;}
+
+/* NAV */
+nav{background:#fff;border-bottom:1px solid #E2E8F0;padding:0 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.nav-logo{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.nav-logo-icon{width:32px;height:32px;background:#1B4FD8;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.nav-logo span{font-weight:700;font-size:16px;}
+.nav-links{display:flex;align-items:center;gap:16px;}
+.nav-links a{font-size:14px;color:#475569;font-weight:500;}
+.btn-primary{background:#1B4FD8;color:#fff;padding:8px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;}
+.btn-primary:hover{background:#1a44c2;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0A1628 0%,#112240 100%);padding:80px 24px 72px;text-align:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:20px;padding:6px 14px;margin-bottom:28px;}
+.hero-badge-dot{width:8px;height:8px;border-radius:50%;background:#4ADE80;}
+.hero-badge span{font-size:13px;color:#93C5FD;font-weight:500;}
+.hero h1{font-size:clamp(30px,5vw,50px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:20px;}
+.hero h1 span{color:#60A5FA;}
+.hero p{font-size:17px;color:#94A3B8;margin-bottom:36px;line-height:1.7;max-width:620px;margin-left:auto;margin-right:auto;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-hero{background:#1B4FD8;color:#fff;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;}
+.btn-hero:hover{background:#1a44c2;}
+.btn-hero-outline{background:rgba(255,255,255,0.08);color:#fff;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:500;border:1px solid rgba(255,255,255,0.15);cursor:pointer;}
+.btn-hero-outline:hover{background:rgba(255,255,255,0.12);}
+
+/* STATS */
+.stats{background:#fff;border-bottom:1px solid #E2E8F0;padding:28px 24px;}
+.stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;text-align:center;}
+.stat-num{font-size:28px;font-weight:700;color:#1B4FD8;}
+.stat-label{font-size:13px;color:#64748B;margin-top:2px;}
+
+/* WHO */
+.section{padding:72px 24px;}
+.section-inner{max-width:1000px;margin:0 auto;}
+.section h2{font-size:30px;font-weight:700;text-align:center;margin-bottom:10px;}
+.section-sub{text-align:center;color:#64748B;margin-bottom:48px;font-size:16px;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:24px 20px;}
+.card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.card h3{font-weight:600;font-size:15px;margin-bottom:6px;}
+.card p{font-size:13px;color:#64748B;line-height:1.6;}
+
+/* PRICING */
+#pricing{background:#F8FAFC;}
+.pricing-toggle{display:flex;justify-content:center;margin-bottom:36px;}
+.toggle-wrap{background:#E2E8F0;border-radius:8px;padding:4px;display:inline-flex;gap:4px;}
+.toggle-btn{padding:8px 20px;border-radius:6px;font-size:14px;font-weight:500;border:none;cursor:pointer;background:transparent;color:#64748B;transition:all 0.2s;}
+.toggle-btn.active{background:#fff;color:#0F172A;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;align-items:start;max-width:1000px;margin:0 auto;}
+.plan-card{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:28px 24px;}
+.plan-card.featured{background:#0A1628;border:2px solid #1B4FD8;position:relative;}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#1B4FD8;color:#fff;font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;white-space:nowrap;}
+.plan-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;color:#64748B;}
+.plan-card.featured .plan-label{color:#60A5FA;}
+.plan-price{font-size:40px;font-weight:700;color:#0F172A;margin-bottom:4px;}
+.plan-card.featured .plan-price{color:#fff;}
+.plan-desc{font-size:13px;color:#94A3B8;margin-bottom:20px;}
+.plan-btn{display:block;text-align:center;padding:12px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;border:none;width:100%;margin-bottom:20px;}
+.plan-btn-dark{background:#F1F5F9;color:#0F172A;}
+.plan-btn-dark:hover{background:#E2E8F0;}
+.plan-btn-blue{background:#1B4FD8;color:#fff;}
+.plan-btn-blue:hover{background:#1a44c2;}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.plan-features li{font-size:13px;display:flex;align-items:center;gap:8px;color:#475569;}
+.plan-card.featured .plan-features li{color:#CBD5E1;}
+
+/* TRACKER PAGE */
+.tracker-wrap{max-width:1100px;margin:0 auto;padding:20px;}
+.tracker-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;}
+.tracker-title h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.tracker-title p{font-size:13px;color:#64748B;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748B;}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+.map-wrap{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:8px;margin-bottom:16px;}
+.map-wrap svg{width:100%;height:auto;display:block;}
+.state-path{cursor:pointer;stroke:#fff;stroke-width:0.6;transition:opacity 0.15s;}
+.state-path:hover{opacity:0.75;}
+.state-path.selected{stroke:#0F172A;stroke-width:2;}
+.detail-panel{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:20px;min-height:90px;}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#94A3B8;font-size:14px;padding:24px 0;text-align:center;gap:8px;}
+.detail-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.state-name{font-size:18px;font-weight:700;color:#0F172A;}
+.status-badge{font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.badge-federal{background:#DBEAFE;color:#1D4ED8;}
+.badge-state{background:#D1FAE5;color:#065F46;}
+.badge-bifurcated{background:#FEF3C7;color:#92400E;}
+.badge-live{background:#D1FAE5;color:#065F46;font-size:11px;padding:3px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;}
+.badge-cached{background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.detail-field-label{font-size:11px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px;}
+.detail-field-value{font-size:14px;font-weight:600;color:#0F172A;}
+.detail-section{border-top:1px solid #F1F5F9;padding-top:12px;margin-top:4px;margin-bottom:4px;}
+.detail-section-title{font-size:11px;font-weight:600;color:#0F172A;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;}
+.detail-text{font-size:13px;color:#475569;line-height:1.7;}
+.detail-rules{padding-left:18px;margin:0;display:flex;flex-direction:column;gap:6px;}
+.detail-rules li{font-size:13px;color:#475569;line-height:1.6;}
+.source-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#1B4FD8;margin-top:10px;}
+.source-link:hover{text-decoration:underline;}
+.timestamp{font-size:11px;color:#CBD5E1;margin-top:10px;}
+.refresh-btn{font-size:12px;padding:3px 8px;border:1px solid #E2E8F0;border-radius:6px;background:none;cursor:pointer;color:#64748B;margin-left:4px;}
+.refresh-btn:hover{background:#F8FAFC;}
+.loading-wrap{text-align:center;padding:28px 0;}
+.spinner{width:24px;height:24px;border:2px solid #E2E8F0;border-top-color:#1B4FD8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:#64748B;}
+.loading-sub{font-size:12px;color:#94A3B8;margin-top:4px;}
+.error-wrap{font-size:14px;color:#DC2626;margin-bottom:10px;}
+.retry-btn{font-size:13px;padding:7px 14px;border-radius:7px;border:1px solid #E2E8F0;background:#F8FAFC;cursor:pointer;color:#475569;}
+
+/* UPGRADE BANNER */
+.upgrade-banner{margin-top:16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.upgrade-banner-text h4{font-weight:600;font-size:14px;color:#1D4ED8;margin-bottom:2px;}
+.upgrade-banner-text p{font-size:13px;color:#3B82F6;}
+
+/* PAYMENT PAGE */
+.payment-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#F8FAFC;}
+.payment-card{width:100%;max-width:460px;background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:36px;}
+.payment-card h2{font-size:22px;font-weight:700;margin-bottom:4px;}
+.payment-card .sub{font-size:14px;color:#64748B;margin-bottom:24px;}
+.plan-summary{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}
+.plan-summary-name{font-weight:600;font-size:14px;}
+.plan-summary-desc{font-size:12px;color:#64748B;margin-top:2px;}
+.plan-summary-price{font-size:20px;font-weight:700;color:#1B4FD8;}
+.state-select{width:100%;padding:10px 12px;border:1px solid #E2E8F0;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;color:#0F172A;background:#fff;margin-bottom:6px;}
+.state-select-note{font-size:12px;color:#94A3B8;margin-bottom:20px;}
+.checkout-btn{width:100%;background:#1B4FD8;color:#fff;padding:13px;border-radius:9px;font-size:15px;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;}
+.checkout-btn:hover{background:#1a44c2;}
+.checkout-btn:disabled{background:#93C5FD;cursor:not-allowed;}
+.secure-note{font-size:12px;color:#94A3B8;text-align:center;}
+.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 14px;font-size:13px;color:#DC2626;margin-bottom:16px;}
+.back-link{font-size:12px;color:#64748B;margin-top:16px;cursor:pointer;}
+.back-link:hover{color:#0F172A;}
+
+/* SUCCESS PAGE */
+.success-page{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.success-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:48px 36px;text-align:center;max-width:440px;width:100%;}
+.success-icon{width:64px;height:64px;background:#D1FAE5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.success-card h2{font-size:24px;font-weight:700;margin-bottom:8px;}
+.success-card p{font-size:15px;color:#64748B;margin-bottom:28px;line-height:1.6;}
+
+/* FOOTER */
+footer{background:#0A1628;padding:40px 24px;text-align:center;}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;}
+.footer-logo-icon{width:28px;height:28px;background:#1B4FD8;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.footer-logo span{font-weight:700;font-size:15px;color:#fff;}
+footer p{font-size:12px;color:#475569;max-width:500px;margin:0 auto;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon"><i class="ti ti-map-2" style="color:#fff;font-size:18px;"></i></div>
+    <span>NSA/IDR Tracker</span>
+  </div>
+  <div class="nav-links">
+    <a href="#pricing" onclick="showPage('home')">Pricing</a>
+    <button class="btn-primary" onclick="showPage('tracker')">Open tracker</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge"><div class="hero-badge-dot"></div><span>Live AI-powered · Updated in real time</span></div>
+    <h1>Know every state's NSA/IDR law<br><span>in seconds, not hours</span></h1>
+    <p>The only tool that gives providers, payers, and billing teams instant AI-powered clarity on whether federal law, state law, or bifurcated rules apply — for all 50 states.</p>
+    <div class="hero-btns">
+      <button class="btn-hero" onclick="showPage('tracker')"><i class="ti ti-map-2"></i> Open the tracker</button>
+      <button class="btn-hero-outline" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">See pricing</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stats-inner">
+      <div><div class="stat-num">50</div><div class="stat-label">States covered</div></div>
+      <div><div class="stat-num">3</div><div class="stat-label">Law types tracked</div></div>
+      <div><div class="stat-num">Live</div><div class="stat-label">AI-powered lookups</div></div>
+      <div><div class="stat-num">&lt;10s</div><div class="stat-label">Average lookup time</div></div>
+    </div>
+  </div>
+
+  <!-- Who it's for -->
+  <div class="section" style="background:#fff;">
+    <div class="section-inner">
+      <h2>Built for healthcare compliance professionals</h2>
+      <p class="section-sub">Anyone who needs to know which IDR rules apply — fast.</p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon" style="background:#EFF6FF;"><i class="ti ti-stethoscope" style="font-size:22px;color:#1B4FD8;"></i></div>
+          <h3>Providers & hospitals</h3>
+          <p>Know exactly which IDR process to file under before submitting a dispute.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#ECFDF5;"><i class="ti ti-building-bank" style="font-size:22px;color:#059669;"></i></div>
+          <h3>Health plans & TPAs</h3>
+          <p>Stay compliant across all markets. Know which states require state-level IDR.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#FEF3C7;"><i class="ti ti-receipt" style="font-size:22px;color:#D97706;"></i></div>
+          <h3>Billing companies</h3>
+          <p>Advise clients accurately on dispute rights across every state they operate in.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#F5F3FF;"><i class="ti ti-scale" style="font-size:22px;color:#7C3AED;"></i></div>
+          <h3>Healthcare attorneys</h3>
+          <p>Reference current law status instantly without hours of research.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="section" id="pricing">
+    <div class="section-inner">
+      <h2>Simple, transparent pricing</h2>
+      <p class="section-sub">Less than one hour of a billing consultant's time. No contracts, cancel anytime.</p>
+      <div class="pricing-grid">
+
+        <div class="plan-card">
+          <div class="plan-label">Single lookup</div>
+          <div class="plan-price">$9.99</div>
+          <div class="plan-desc">one time · one state</div>
+          <button class="plan-btn plan-btn-dark" onclick="showPayment('single')">Get started</button>
+          <ul class="plan-features">
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>1 state lookup</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Full AI analysis</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Key rules & dates</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Official source link</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Session expires after use</li>
+          </ul>
+        </div>
+
+        <div class="plan-card featured">
+          <div class="plan-badge">Most popular</div>
+          <div class="plan-label">Monthly</div>
+          <div class="plan-price">$79</div>
+          <div class="plan-desc">per month · all 50 states</div>
+          <button class="plan-btn plan-btn-blue" onclick="showPayment('monthly')">Start today</button>
+          <ul class="plan-features">
+            <li><i class="ti ti-check" style="color:#4ADE80;font-size:15px;"></i>All 50 states</li>
+            <li><i class="ti ti-check" style="color:#4ADE80;font-size:15px;"></i>Unlimited lookups</li>
+            <li><i class="ti ti-check" style="color:#4ADE80;font-size:15px;"></i>Live AI + web search</li>
+            <li><i class="ti ti-check" style="color:#4ADE80;font-size:15px;"></i>Recent changes alerts</li>
+            <li><i class="ti ti-check" style="color:#4ADE80;font-size:15px;"></i>On-demand refresh</li>
+            <li><i class="ti ti-check" style="color:#4ADE80;font-size:15px;"></i>Cancel anytime</li>
+          </ul>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-label">Annual</div>
+          <div class="plan-price">$749</div>
+          <div class="plan-desc">per year · saves $199</div>
+          <button class="plan-btn plan-btn-dark" onclick="showPayment('annual')">Get started</button>
+          <ul class="plan-features">
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Everything in monthly</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>2 months free</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Priority support</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Early access to new features</li>
+          </ul>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-label">Team</div>
+          <div class="plan-price">$299</div>
+          <div class="plan-desc">per month · up to 10 users</div>
+          <button class="plan-btn plan-btn-dark" onclick="showPayment('team')">Get started</button>
+          <ul class="plan-features">
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Up to 10 team members</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Shared lookup history</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Admin dashboard</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Priority support</li>
+            <li><i class="ti ti-check" style="color:#059669;font-size:15px;"></i>Custom onboarding</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">
+      <div class="footer-logo-icon"><i class="ti ti-map-2" style="color:#fff;font-size:15px;"></i></div>
+      <span>NSA/IDR Tracker</span>
+    </div>
+    <p>For informational purposes only. Not legal advice. Always verify with official sources and qualified counsel for compliance decisions.</p>
+  </footer>
+
+</div>
+
+<!-- TRACKER PAGE -->
+<div id="page-tracker" class="page">
+  <div class="tracker-wrap">
+    <div class="tracker-header">
+      <div class="tracker-title">
+        <h1><i class="ti ti-map-2" style="font-size:18px;vertical-align:-2px;margin-right:5px;"></i>NSA / IDR State Law Tracker <span style="font-size:13px;font-weight:400;color:#1B4FD8;"><i class="ti ti-brain" style="font-size:13px;"></i> AI-powered</span></h1>
+        <p id="tracker-subtitle">Click any state for a live AI-powered law summary.</p>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#378ADD;"></div>Federal</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#1D9E75;"></div>State</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#EF9F27;"></div>Bifurcated</div>
+      </div>
+    </div>
+    <div class="map-wrap" id="map-container"></div>
+    <div class="detail-panel" id="detail-panel">
+      <div class="detail-empty">
+        <i class="ti ti-hand-click" style="font-size:28px;"></i>
+        Click any state on the map to view its NSA/IDR law details
+      </div>
+    </div>
+    <div id="upgrade-banner" style="display:none;" class="upgrade-banner">
+      <div class="upgrade-banner-text">
+        <h4>Unlock the full AI analysis</h4>
+        <p>Get key rules, recent changes, effective dates, and official source links.</p>
+      </div>
+      <button class="btn-primary" onclick="showPage('home');setTimeout(()=>document.getElementById('pricing').scrollIntoView({behavior:'smooth'}),100)">See plans from $9.99</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT PAGE -->
+<div id="page-payment" class="page">
+  <div class="payment-page">
+    <div class="payment-card">
+      <div class="nav-logo" onclick="showPage('home')" style="margin-bottom:28px;cursor:pointer;">
+        <div class="nav-logo-icon"><i class="ti ti-map-2" style="color:#fff;font-size:16px;"></i></div>
+        <span style="font-weight:700;font-size:15px;">NSA/IDR Tracker</span>
+      </div>
+      <h2>Complete your purchase</h2>
+      <p class="sub">You'll be redirected to our secure payment processor.</p>
+      <div class="plan-summary">
+        <div>
+          <div class="plan-summary-name" id="pay-plan-name"></div>
+          <div class="plan-summary-desc" id="pay-plan-desc"></div>
+        </div>
+        <div class="plan-summary-price" id="pay-plan-price"></div>
+      </div>
+      <div id="state-selector-wrap" style="display:none;">
+        <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Select your state <span style="color:#DC2626;">*</span></label>
+        <select id="state-select" class="state-select">
+          <option value="">Choose a state…</option>
+        </select>
+        <p class="state-select-note"><i class="ti ti-info-circle" style="font-size:12px;"></i> Your lookup is locked to this state. Choose carefully.</p>
+      </div>
+      <div id="pay-error" class="error-box" style="display:none;"></div>
+      <button class="checkout-btn" id="checkout-btn" onclick="handleCheckout()">
+        <i class="ti ti-lock"></i> Continue to secure checkout
+      </button>
+      <p class="secure-note"><i class="ti ti-shield-check" style="font-size:12px;"></i> Secured by Stripe. We never store your card details.</p>
+    </div>
+    <p class="back-link" onclick="showPage('home')">← Back to pricing</p>
+  </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div id="page-success" class="page">
+  <div class="success-page">
+    <div class="success-card">
+      <div class="success-icon"><i class="ti ti-check" style="font-size:32px;color:#059669;"></i></div>
+      <h2>You're all set!</h2>
+      <p>Your payment was successful. You now have full access to the NSA/IDR State Law Tracker.</p>
+      <button class="btn-primary" style="width:100%;padding:13px;font-size:15px;" onclick="activateAccess()">Open the tracker</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+const BASE_DATA = {
+  AL:{name:"Alabama",status:"federal"},AK:{name:"Alaska",status:"federal"},
+  AZ:{name:"Arizona",status:"federal"},AR:{name:"Arkansas",status:"federal"},
+  CA:{name:"California",status:"state"},CO:{name:"Colorado",status:"bifurcated"},
+  CT:{name:"Connecticut",status:"state"},DE:{name:"Delaware",status:"federal"},
+  FL:{name:"Florida",status:"bifurcated"},GA:{name:"Georgia",status:"federal"},
+  HI:{name:"Hawaii",status:"bifurcated"},ID:{name:"Idaho",status:"federal"},
+  IL:{name:"Illinois",status:"bifurcated"},IN:{name:"Indiana",status:"federal"},
+  IA:{name:"Iowa",status:"federal"},KS:{name:"Kansas",status:"federal"},
+  KY:{name:"Kentucky",status:"federal"},LA:{name:"Louisiana",status:"federal"},
+  ME:{name:"Maine",status:"bifurcated"},MD:{name:"Maryland",status:"state"},
+  MA:{name:"Massachusetts",status:"state"},MI:{name:"Michigan",status:"federal"},
+  MN:{name:"Minnesota",status:"bifurcated"},MS:{name:"Mississippi",status:"federal"},
+  MO:{name:"Missouri",status:"federal"},MT:{name:"Montana",status:"federal"},
+  NE:{name:"Nebraska",status:"federal"},NV:{name:"Nevada",status:"bifurcated"},
+  NH:{name:"New Hampshire",status:"bifurcated"},NJ:{name:"New Jersey",status:"state"},
+  NM:{name:"New Mexico",status:"bifurcated"},NY:{name:"New York",status:"state"},
+  NC:{name:"North Carolina",status:"federal"},ND:{name:"North Dakota",status:"federal"},
+  OH:{name:"Ohio",status:"federal"},OK:{name:"Oklahoma",status:"federal"},
+  OR:{name:"Oregon",status:"bifurcated"},PA:{name:"Pennsylvania",status:"federal"},
+  RI:{name:"Rhode Island",status:"bifurcated"},SC:{name:"South Carolina",status:"federal"},
+  SD:{name:"South Dakota",status:"federal"},TN:{name:"Tennessee",status:"federal"},
+  TX:{name:"Texas",status:"bifurcated"},UT:{name:"Utah",status:"federal"},
+  VT:{name:"Vermont",status:"bifurcated"},VA:{name:"Virginia",status:"bifurcated"},
+  WA:{name:"Washington",status:"state"},WV:{name:"West Virginia",status:"federal"},
+  WI:{name:"Wisconsin",status:"federal"},WY:{name:"Wyoming",status:"federal"}
+};
+const STATUS_COLORS={federal:"#378ADD",state:"#1D9E75",bifurcated:"#EF9F27",pending:"#888780"};
+const FIPS={"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+const PLANS={
+  single:{name:'Single State Lookup',desc:'One state, one time',price:'$9.99'},
+  monthly:{name:'Monthly Subscription',desc:'All 50 states, unlimited lookups',price:'$79/mo'},
+  annual:{name:'Annual Subscription',desc:'All 50 states, save $199',price:'$749/yr'},
+  team:{name:'Team Plan',desc:'Up to 10 users',price:'$299/mo'}
+};
+
+let hasAccess = false;
+let currentPlan = null;
+let lockedState = null;
+let singleUsed = false;
+let selectedPath = null;
+let cache = {};
+let mapDrawn = false;
+let currentAbbr = null;
+
+// Check URL params on load
+const params = new URLSearchParams(window.location.search);
+if(params.get('access')==='paid'){
+  hasAccess=true;
+  currentPlan=params.get('plan');
+  lockedState=params.get('state')||null;
+}
+if(params.get('success')==='1') showPage('success');
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo(0,0);
+  if(page==='tracker' && !mapDrawn) drawMap();
+}
+
+function showPayment(plan) {
+  currentPlan=plan;
+  const info=PLANS[plan];
+  document.getElementById('pay-plan-name').textContent=info.name;
+  document.getElementById('pay-plan-desc').textContent=info.desc;
+  document.getElementById('pay-plan-price').textContent=info.price;
+  const wrap=document.getElementById('state-selector-wrap');
+  if(plan==='single'){
+    wrap.style.display='block';
+    const sel=document.getElementById('state-select');
+    sel.innerHTML='<option value="">Choose a state…</option>';
+    Object.entries(BASE_DATA).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([abbr,d])=>{
+      const o=document.createElement('option');
+      o.value=abbr; o.textContent=d.name; sel.appendChild(o);
+    });
+  } else { wrap.style.display='none'; }
+  document.getElementById('pay-error').style.display='none';
+  showPage('payment');
+}
+
+function handleCheckout() {
+  const plan=currentPlan;
+  const info=PLANS[plan];
+  if(plan==='single'){
+    const st=document.getElementById('state-select').value;
+    if(!st){ document.getElementById('pay-error').textContent='Please select a state.'; document.getElementById('pay-error').style.display='block'; return; }
+    lockedState=st;
+  }
+  // In production this would call your Stripe API
+  // For now simulate success
+  const btn=document.getElementById('checkout-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin 0.7s linear infinite;"></span> Processing…';
+  setTimeout(()=>{
+    hasAccess=true;
+    currentPlan=plan;
+    singleUsed=false;
+    showPage('success');
+  },1500);
+}
+
+function activateAccess() {
+  showPage('tracker');
+}
+
+async function drawMap() {
+  mapDrawn=true;
+  try {
+    const res=await fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json');
+    const us=await res.json();
+    const states=topojson.feature(us,us.objects.states);
+    const W=960,H=600;
+    const proj=d3.geoAlbersUsa().scale(1280).translate([W/2,H/2]);
+    const path=d3.geoPath().projection(proj);
+    const svg=d3.select('#map-container').append('svg').attr('viewBox',`0 0 ${W} ${H}`);
+
+    svg.selectAll('path').data(states.features).enter().append('path')
+      .attr('d',path)
+      .attr('class','state-path')
+      .attr('fill',d=>{const a=FIPS[String(d.id).padStart(2,'0')];return BASE_DATA[a]?STATUS_COLORS[BASE_DATA[a].status]:STATUS_COLORS.pending;})
+      .on('mouseover',function(){d3.select(this).style('opacity',0.8);})
+      .on('mouseout',function(){d3.select(this).style('opacity',1);})
+      .on('click',function(event,d){
+        const abbr=FIPS[String(d.id).padStart(2,'0')];
+        if(!abbr)return;
+        if(selectedPath) d3.select(selectedPath).classed('selected',false);
+        d3.select(this).classed('selected',true);
+        selectedPath=this;
+        handleStateClick(abbr);
+      })
+      .append('title').text(d=>{const a=FIPS[String(d.id).padStart(2,'0')];return BASE_DATA[a]?BASE_DATA[a].name:'';});
+
+    states.features.forEach(d=>{
+      const abbr=FIPS[String(d.id).padStart(2,'0')];
+      if(!abbr)return;
+      const c=path.centroid(d);
+      if(!c||isNaN(c[0]))return;
+      svg.append('text').attr('x',c[0]).attr('y',c[1]+4).attr('text-anchor','middle')
+        .attr('font-size','8').attr('font-weight','600').attr('fill','white')
+        .attr('font-family','Inter,sans-serif').attr('pointer-events','none').text(abbr);
+    });
+  } catch(e){ document.getElementById('map-container').innerHTML='<p style="padding:20px;color:#94A3B8;font-size:13px;">Map failed to load. Check your internet connection.</p>'; }
+}
+
+async function handleStateClick(abbr) {
+  currentAbbr=abbr;
+  if(!hasAccess){
+    showBasicInfo(abbr);
+    document.getElementById('upgrade-banner').style.display='flex';
+    return;
+  }
+  if(currentPlan==='single' && singleUsed && abbr!==lockedState){
+    alert('Your single-state lookup has been used. Please upgrade for full access.');
+    return;
+  }
+  if(currentPlan==='single' && lockedState && abbr!==lockedState){
+    alert(`Your single-state lookup is locked to ${BASE_DATA[lockedState]?.name}.`);
+    return;
+  }
+  document.getElementById('upgrade-banner').style.display='none';
+  if(cache[abbr]){ showResult(abbr,cache[abbr],true); return; }
+  await fetchState(abbr);
+}
+
+function showBasicInfo(abbr) {
+  const d=BASE_DATA[abbr];
+  if(!d)return;
+  const statusLabel={federal:'Federal law',state:'State law',bifurcated:'Bifurcated'}[d.status]||d.status;
+  const badgeClass={federal:'badge-federal',state:'badge-state',bifurcated:'badge-bifurcated'}[d.status]||'';
+  document.getElementById('detail-panel').innerHTML=`
+    <div class="detail-header">
+      <span class="state-name">${d.name}</span>
+      <span class="status-badge ${badgeClass}">${statusLabel}</span>
+    </div>
+    <p style="font-size:13px;color:#64748B;line-height:1.6;">This state uses <strong>${statusLabel}</strong> for NSA/IDR disputes. Upgrade to see the full AI analysis including key rules, effective dates, recent changes, and official source links.</p>`;
+}
+
+async function fetchState(abbr, forceRefresh) {
+  if(currentPlan==='single'&&singleUsed&&!forceRefresh)return;
+  const panel=document.getElementById('detail-panel');
+  panel.innerHTML=`<div class="loading-wrap"><div class="spinner"></div><div class="loading-text">Looking up current NSA/IDR law for <strong>${BASE_DATA[abbr]?.name}</strong>…</div><div class="loading-sub">Searching CMS, state DOI, and recent legal updates</div></div>`;
+
+  try {
+    const prompt=`You are an expert in the federal No Surprises Act (NSA) and Independent Dispute Resolution (IDR) laws. Search for the most current information about ${BASE_DATA[abbr]?.name}'s surprise billing and IDR laws as of today. Return ONLY valid JSON, no markdown, no backticks: {"status":"federal|state|bifurcated","effectiveDate":"string","summary":"2-3 sentence summary","keyRules":["rule1","rule2","rule3"],"recentChanges":"recent changes or No major recent changes reported.","whoItAffects":"brief note on providers vs payers vs patients","sourceUrl":"official URL"}`;
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await res.json();
+    let text='';
+    for(const b of data.content){if(b.type==='text')text+=b.text;}
+    text=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(text);
+    cache[abbr]=parsed;
+    if(currentPlan==='single')singleUsed=true;
+    showResult(abbr,parsed,false);
+  } catch(e){
+    panel.innerHTML=`<div class="error-wrap"><i class="ti ti-alert-circle"></i> Could not load live data. Please try again.</div><button class="retry-btn" onclick="fetchState('${abbr}',true)"><i class="ti ti-refresh" style="font-size:12px;"></i> Retry</button>`;
+  }
+}
+
+function showResult(abbr,d,fromCache){
+  const info=BASE_DATA[abbr];
+  const status=d.status||info.status;
+  const statusLabel={federal:'Federal law',state:'State law',bifurcated:'Bifurcated'}[status]||status;
+  const badgeClass={federal:'badge-federal',state:'badge-state',bifurcated:'badge-bifurcated'}[status]||'';
+  const now=new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const rules=(d.keyRules||[]).map(r=>`<li>${r}</li>`).join('');
+  document.getElementById('detail-panel').innerHTML=`
+    <div class="detail-header">
+      <span class="state-name">${info.name}</span>
+      <span class="status-badge ${badgeClass}">${statusLabel}</span>
+      ${fromCache
+        ?`<span class="badge-cached"><i class="ti ti-clock" style="font-size:11px;"></i> Cached</span><button class="refresh-btn" onclick="delete cache['${abbr}'];fetchState('${abbr}',true);"><i class="ti ti-refresh" style="font-size:11px;"></i> Refresh</button>`
+        :`<span class="badge-live"><i class="ti ti-antenna-bars-5" style="font-size:11px;"></i> Live</span>`}
+    </div>
+    <div class="detail-grid">
+      <div><div class="detail-field-label">Effective date</div><div class="detail-field-value">${d.effectiveDate||'See source'}</div></div>
+      <div><div class="detail-field-label">Law type</div><div class="detail-field-value">${statusLabel}</div></div>
+    </div>
+    ${d.summary?`<div class="detail-section"><div class="detail-section-title">Current status</div><div class="detail-text">${d.summary}</div></div>`:''}
+    ${rules?`<div class="detail-section"><div class="detail-section-title">Key rules</div><ul class="detail-rules">${rules}</ul></div>`:''}
+    ${d.recentChanges?`<div class="detail-section"><div class="detail-section-title">Recent changes</div><div class="detail-text">${d.recentChanges}</div></div>`:''}
+    ${d.whoItAffects?`<div class="detail-section"><div class="detail-section-title">Who it affects</div><div class="detail-text">${d.whoItAffects}</div></div>`:''}
+    ${d.sourceUrl?`<a class="source-link" href="${d.sourceUrl}" target="_blank"><i class="ti ti-external-link" style="font-size:13px;"></i> View official source</a>`:''}
+    <div class="timestamp">${fromCache?'Cached':'Live AI lookup'} · ${now}</div>`;
+}
+
+// Populate state dropdown
+const sel=document.getElementById('state-select');
+Object.entries(BASE_DATA).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([abbr,d])=>{
+  const o=document.createElement('option');o.value=abbr;o.textContent=d.name;sel.appendChild(o);
+});
+</script>
+</body>
+</html>
